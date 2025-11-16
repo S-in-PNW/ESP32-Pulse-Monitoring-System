@@ -37,10 +37,3 @@ jobs:
       - name: Firmware Size
         run: |
           pio run --target size
-
-      - name: Upload firmware
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: firmware
-          path: .pio/build/*/*.bin
