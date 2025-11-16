@@ -43,3 +43,6 @@
 # ide files
 .pio
 .vscode
+
+# secrets file
+/include/secrets.h
