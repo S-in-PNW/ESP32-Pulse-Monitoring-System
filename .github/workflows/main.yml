@@ -21,6 +21,13 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Create dummy secrets.h for CI
+        run: |
+          mkdir -p include
+          echo '#pragma once' > include/secrets.h
+          echo 'const char* WIFI_SSID = "DUMMY_SSID";' >> include/secrets.h
+          echo 'const char* WIFI_PASSWORD = "DUMMY_PASSWORD";' >> include/secrets.h
+
       - name: Install PlatformIO
         run: |
           python -m pip install --upgrade pip
