@@ -490,10 +490,29 @@ bool PulseSensorPlayground::setupInterrupt(){
         This will set up and start the timer interrupt on ESP32.
         The interrupt will occur every 2000uS or 500Hz.
     */
-    sampleTimer = timerBegin(1000000); // 1MHz ticker, 1uS tick period                
-    timerAttachInterrupt(sampleTimer, &onInterrupt);  
-    timerAlarm(sampleTimer, 2000, true, 0);    
-    result = true;
+   static bool interruptInitialized = false;
+   if (interruptInitialized) {
+      return true;   // already configured, don't re-register callbacks
+    }
+    interruptInitialized = true;
+  #endif
+
+  #if defined(ARDUINO_ARCH_ESP32)
+
+    /*Altered Timer Object tk*/
+
+    // New-style ESP32 timer config: 1 MHz tick (80 MHz / 80), 2 ms period
+    const uint8_t timerNumber  = 0;    // use hardware timer 0
+    const uint16_t prescaler   = 80;   // 80 MHz / 80 = 1 MHz -> 1 µs per tick
+    const bool countUp         = true;
+
+    sampleTimer = timerBegin(timerNumber, prescaler, countUp);
+    timerAttachInterrupt(sampleTimer, &onInterrupt, true);   // edge-triggered
+
+    // 2000 ticks at 1 µs = 2 ms
+    timerAlarmWrite(sampleTimer, 2000, true);  // auto-reload
+    timerAlarmEnable(sampleTimer);
+
   #endif
 
   #if defined(ARDUINO_ARCH_ESP8266)

@@ -44,6 +44,16 @@
 #include <AsyncTCP.h> // https://github.com/dvarrel/ESPAsyncTCP
 #include <ESPAsyncWebSrv.h> // https://github.com/dvarrel/ESPAsyncWebSrv
 #include <Arduino_JSON.h>
+#include <PulseSensorPlayground.h>
+#include "secrets.h"
+
+/*
+Forward declarations for the change to a main.cpp file
+*/
+String updatePulseDataJson();
+void beginWiFi();
+void serialCheck();
+void printControlInfo();
 
 /*
    Include PulseSensor Playground library for all the good stuff!
@@ -81,14 +91,14 @@ PulseSensorPlayground pulseSensor;
       waveform. THRESHOLD sets the default when there is no pulse present.
       Adjust as neccesary.
 */
-const int PULSE_INPUT = 5;
-const int PULSE_BLINK = 3;    
+const int PULSE_INPUT = 35;
+const int PULSE_BLINK = 26;    
 const int PULSE_FADE = 12;
 const int THRESHOLD = 685;   
 
 /*  Replace with your network credentials  */
-const char* ssid = "CANAAN";
-const char* password = "shmootiekabootie";
+const char* ssid = WIFI_SSID;
+const char* password = WIFI_PASSWORD;
 
 /* 
     Create AsyncWebServer object on port 80
@@ -229,8 +239,12 @@ void setup() {
   pulseSensor.setSerial(Serial);
   pulseSensor.setThreshold(THRESHOLD);
 
+  Serial.println("Before pulseSensor.begin()");
+
 /*  Now that everything is ready, start reading the PulseSensor signal. */
+  Serial.println(!pulseSensor.begin());
   if (!pulseSensor.begin()) {
+    Serial.println("!pulseSensor.begin() on line 245");
     while(1) {
 /*  If the pulseSensor object fails, flash the led  */
       digitalWrite(PULSE_BLINK, LOW);
@@ -328,7 +342,7 @@ void serialCheck(){
         sendPulseSignal = false;
         break;
       case '?':
-        printControlInfo()
+        printControlInfo();
         break;
       default:
         break;
