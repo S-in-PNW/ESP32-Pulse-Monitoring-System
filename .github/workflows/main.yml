@@ -41,6 +41,9 @@ jobs:
         run: |
           pio run
 
+      - name: Run PlatformIO tests (native)
+        run: pio test -e native
+
       - name: Firmware Size
         run: |
           pio run --target size
