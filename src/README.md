@@ -1,2 +1,2 @@
 # Heart Rate Monitor
-This project will create a bluetooth transceiver that can receive bluetooth audio input from a smart device and convert it into an AUX cord's TRS connector.
+This is an ESP32 wearable pulse monitor using a PPG sensor to detect heart rate and stream real-time BPM data over Wi-Fi. It features an asynchronous web dashboard with JSON/SSE updates, LED heartbeat indicators, and optimized ADC sampling for reliable, low-latency biosignal monitoring.
